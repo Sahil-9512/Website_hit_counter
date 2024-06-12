@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Hit Counter</title>
+    <link rel="stylesheet" href="./stylefile.css">
+</head>
+<body>
+    <header>
+        <h1>Website Hit Counter</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Track Visit</h2>
+            <form id="visit-form">
+                <label for="customerId">Customer ID:</label>
+                <input type="text" id="customerId" name="customerId" required>
+                <label for="deviceId">Device ID:</label>
+                <input type="text" id="deviceId" name="deviceId" required>
+                <label for="websiteId">Website ID:</label>
+                <input type="text" id="websiteId" name="websiteId" required>
+                <button type="submit">Track Visit</button>
+            </form>
+            <div id="visit-result"></div>
+        </section>
+        <section>
+            <h2>Get Customer Visit Count</h2>
+            <form id="customer-visit-form">
+                <label for="customerIdCount">Customer ID:</label>
+                <input type="text" id="customerIdCount" name="customerIdCount" required>
+                <label for="websiteIdCount">Website ID:</label>
+                <input type="text" id="websiteIdCount" name="websiteIdCount" required>
+                <button type="submit">Get Count</button>
+            </form>
+            <div id="customer-visit-result"></div>
+        </section>
+        <section>
+            <h2>Get Overall Website Hit Count</h2>
+            <form id="overall-visit-form">
+                <label for="websiteIdOverall">Website ID:</label>
+                <input type="text" id="websiteIdOverall" name="websiteIdOverall" required>
+                <button type="submit">Get Count</button>
+            </form>
+            <div id="overall-visit-result"></div>
+        </section>
+    </main>
+    <script>
+       document.getElementById('visit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const customerId = document.getElementById('customerId').value;
+    const deviceId = document.getElementById('deviceId').value;
+    const websiteId = document.getElementById('websiteId').value;
+
+    const response = await fetch('/visit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerId, deviceId, websiteId }),
+    });
+    const result = await response.text();
+    document.getElementById('visit-result').textContent = result;
+    alert(result); // Display alert message
+});
+
+document.getElementById('customer-visit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const customerId = document.getElementById('customerIdCount').value;
+    const websiteId = document.getElementById('websiteIdCount').value;
+
+    const response = await fetch(`/customer-visit-count?customerId=${customerId}&websiteId=${websiteId}`);
+    const result = await response.text();
+    document.getElementById('customer-visit-result').textContent = result;
+});
+
+document.getElementById('overall-visit-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const websiteId = document.getElementById('websiteIdOverall').value;
+
+    const response = await fetch(`/overall-visit-count?websiteId=${websiteId}`);
+    const result = await response.text();
+    document.getElementById('overall-visit-result').textContent = result;
+});
+
+    </script>
+</body>
+</html>
